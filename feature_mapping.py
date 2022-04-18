@@ -18,7 +18,7 @@ def display(im_path):
     plt.show()
 
 img2 = cv2.imread('./test_set_2/original_image.jpg')
-img1 = cv2.imread('./test_set_2/outer_product3.jpg')
+img1 = cv2.imread('./test_set_2/outer_product2.jpg')
 
 sift = cv2.xfeatures2d.SIFT_create()
 kp1, des1 = sift.detectAndCompute(img1,None)
@@ -35,7 +35,7 @@ print(len(good))
 
 # 결과 출력
 #cv2.imshow('Good Match', res)
-cv2.imwrite('../img/test_set_2/feature_mapping_3.jpg', img3)
-#display('../img/test_set_2/feature_mapping_1.jpg')
+cv2.imwrite('./test_set_2/feature_mapping_3.jpg', img3)
+display('./test_set_2/feature_mapping_3.jpg')
 cv2.waitKey()
 cv2.destroyAllWindows()
