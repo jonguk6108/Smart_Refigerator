@@ -27,7 +27,7 @@ def display(im_path):
 ### Part 1 ### sta
 # classfication boundary box in original picture and store each index's position informations
 
-image = cv2.imread('./test_set_3/gusilbul1.jpg')
+image = cv2.imread('./test_set_3/sample4.jpg')
 #image = cv2.imread('./test_set_2/product3.jpg')
 original = image.copy()
 
@@ -100,10 +100,12 @@ for i in range(0, index):
         boundary_table[j][0], boundary_table[j][2], boundary_table[j][1], boundary_table[j][3] = jx1 , jx2 - jx1, jy1, jy2 - jy1
         boundary_table[i][4] = iremove
 
+"""
         print( str(i) + str(j))
         for k in range(index) : 
             print(str( boundary_table[k][0] ) + " " + str( boundary_table[k][0] + boundary_table[k][2] ) + " " + str( boundary_table[k][1] ) + " " + str( boundary_table[k][1] + boundary_table[k][3] ) + " ")
         print(" ")
+"""
 
 #merge boundary box -2
 for i in range(0, index):

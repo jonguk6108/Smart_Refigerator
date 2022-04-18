@@ -18,11 +18,8 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
-img2 = cv2.imread('./test_set_3/inner_example_1.jpg')
-img1 = cv2.imread('./test_set_3/sample4.jpg')
-
-#if os.path.exists("./test_set_3/outer_product*"):
-    os.remove("./test_set_3/outer_product_"+str(i))
+img2 = cv2.imread('./test_set_3/sample8.jpg')
+img1 = cv2.imread('./test_set_3/sample2.jpg')
 
 '''
 img2 = cv2.imread('./test_set_3/sample1.jpg')
@@ -37,7 +34,7 @@ bf = cv2.BFMatcher()
 matches = bf.knnMatch(des1,des2, k=2)
 good = []
 for m,n in matches:
-    if m.distance < 0.75*n.distance:
+    if m.distance < 0.65*n.distance:
         good.append([m])
 img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,None,flags=2)
 
@@ -49,3 +46,5 @@ cv2.imwrite('./test_set_3/feature_mapping_output_1.jpg', img3)
 #display('./test_set_3/feature_mapping_output_1.jpg')
 cv2.waitKey()
 cv2.destroyAllWindows()
+
+#https://leechamin.tistory.com/330
