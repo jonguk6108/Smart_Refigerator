@@ -1,6 +1,8 @@
 #date : 20220418
 
+from email.base64mime import body_encode
 from re import X
+from tkinter import N
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -56,9 +58,18 @@ for i in range(index):
         if i == j :
             continue
         if ((boundary_table[i][0] >= boundary_table[j][0] ) and ( boundary_table[i][0] <= boundary_table[j][0] + boundary_table[j][2] ) ) and (( boundary_table[i][1] >= boundary_table[j][1] ) and ( boundary_table[i][1] <= boundary_table[j][1] + boundary_table[j][3] ) ):
+            if boundary_table[i][0] + boundary_table[i][2] > boundary_table[j][0] + boundary_table[j][2]:
+                boundary_table[j][2] = boundary_table[i][0] + boundary_table[i][2] - boundary_table[j][0]
+            if boundary_table[i][1] + boundary_table[i][3] > boundary_table[j][1] + boundary_table[j][2]:
+                boundary_table[j][3] = boundary_table[i][1] + boundary_table[i][3] - boundary_table[j][1]
             boundary_table[i][4] = -1
         
         if ((boundary_table[i][0] + boundary_table[i][2] >= boundary_table[j][0] ) and ( boundary_table[i][0] + boundary_table[i][2] <= boundary_table[j][0] + boundary_table[j][2] ) ) and (( boundary_table[i][1] + boundary_table[i][3] >= boundary_table[j][1] ) and ( boundary_table[i][1] + boundary_table[i][3] <= boundary_table[j][1] + boundary_table[j][3] ) ):
+            if boundary_table[i][0] < boundary_table[j][0] :
+                boundary_table[j][2] = boundary_table[j][0] + boundary_table[j][2] - boundary_table[i][0] - boundary_table[i][2]
+                boundary_table[j][0] = boundary_table[i][0]
+            if boundary_table[i][1] + boundary_table[i][3] > boundary_table[j][1] + boundary_table[j][3] :
+                boundary_table[j][3] = boundary_table[i][1] + boundary_table[i][3] - boundary_table[j][1]
             boundary_table[i][4] = -1
 
 for i in range(index) : 
