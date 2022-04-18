@@ -27,7 +27,8 @@ def display(im_path):
 ### Part 1 ### sta
 # classfication boundary box in original picture and store each index's position informations
 
-image = cv2.imread('./test_set_3/original_image.jpg')
+image = cv2.imread('./test_set_3/inner_example_1.jpg')
+#image = cv2.imread('./test_set_2/product3.jpg')
 original = image.copy()
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -52,25 +53,77 @@ for c in cnts:
     boundary_table[index][4] = 1
     index+=1
 
-#merge boundary box
-for i in range(index):
-    for j in range(index):
+'''
+#merge boundary box -1
+for i in range(0, index):
+    for j in range(0, index):
         if i == j :
             continue
-        if ((boundary_table[i][0] >= boundary_table[j][0] ) and ( boundary_table[i][0] <= boundary_table[j][0] + boundary_table[j][2] ) ) and (( boundary_table[i][1] >= boundary_table[j][1] ) and ( boundary_table[i][1] <= boundary_table[j][1] + boundary_table[j][3] ) ):
-            if boundary_table[i][0] + boundary_table[i][2] > boundary_table[j][0] + boundary_table[j][2]:
-                boundary_table[j][2] = boundary_table[i][0] + boundary_table[i][2] - boundary_table[j][0]
-            if boundary_table[i][1] + boundary_table[i][3] > boundary_table[j][1] + boundary_table[j][2]:
-                boundary_table[j][3] = boundary_table[i][1] + boundary_table[i][3] - boundary_table[j][1]
-            boundary_table[i][4] = -1
+        if boundary_table[j][4] != 1 :
+            continue
         
-        if ((boundary_table[i][0] + boundary_table[i][2] >= boundary_table[j][0] ) and ( boundary_table[i][0] + boundary_table[i][2] <= boundary_table[j][0] + boundary_table[j][2] ) ) and (( boundary_table[i][1] + boundary_table[i][3] >= boundary_table[j][1] ) and ( boundary_table[i][1] + boundary_table[i][3] <= boundary_table[j][1] + boundary_table[j][3] ) ):
-            if boundary_table[i][0] < boundary_table[j][0] :
-                boundary_table[j][2] = boundary_table[j][0] + boundary_table[j][2] - boundary_table[i][0] - boundary_table[i][2]
-                boundary_table[j][0] = boundary_table[i][0]
-            if boundary_table[i][1] + boundary_table[i][3] > boundary_table[j][1] + boundary_table[j][3] :
-                boundary_table[j][3] = boundary_table[i][1] + boundary_table[i][3] - boundary_table[j][1]
-            boundary_table[i][4] = -1
+        ix1, ix2, iy1, iy2 = boundary_table[i][0], boundary_table[i][0] + boundary_table[i][2], boundary_table[i][1], boundary_table[i][1] + boundary_table[i][3]
+        jx1, jx2, jy1, jy2 = boundary_table[j][0], boundary_table[j][0] + boundary_table[j][2], boundary_table[j][1], boundary_table[j][1] + boundary_table[j][3]
+        iremove = boundary_table[i][4]
+
+        #left up in jbox
+        if jx1 <= ix1 <= jx2 and jy1 <= iy1 <= jy2  :
+            if jx2 < ix2 :
+                jx2 = ix2
+            if jy2 < iy2 :
+                jy2 = iy2
+            iremove = -1
+
+        #left down in jbox
+        elif jx1 <= ix1 <= jx2 and jy1 <= iy2 <= jy2  :
+            if jx2 < ix2 :
+                jx2 = ix2
+            if iy1 < jy1 :
+                jy1 = iy1
+            iremove = -1
+
+        #right up in jbox
+        elif jx1 <= ix2 <= jx2 and jy1 <= iy1 <= jy2  :
+            if ix1 < jx1 :
+                jx1 = ix1
+            if jy2 < iy2 :
+                jy2 = iy2
+            iremove = -1
+    
+        #right down in jbox
+        elif jx1 <= ix2 <= jx2 and jy1 <= iy2 <= jy2  :
+            if ix1 < jx1 :
+                jx1 = ix1
+            if iy1 < jy1 :
+                jy1 = iy1
+            iremove = -1
+
+        boundary_table[j][0], boundary_table[j][2], boundary_table[j][1], boundary_table[j][3] = jx1 , jx2 - jx1, jy1, jy2 - jy1
+        boundary_table[i][4] = iremove
+
+        print( str(i) + str(j))
+        for k in range(index) : 
+            print(str( boundary_table[k][0] ) + " " + str( boundary_table[k][0] + boundary_table[k][2] ) + " " + str( boundary_table[k][1] ) + " " + str( boundary_table[k][1] + boundary_table[k][3] ) + " ")
+        print(" ")
+
+#merge boundary box -2
+for i in range(0, index):
+    for j in range(0, index):
+        if i == j :
+            continue
+        if boundary_table[j][4] != 1 :
+            continue
+        
+        ix1, ix2, iy1, iy2 = boundary_table[i][0], boundary_table[i][0] + boundary_table[i][2], boundary_table[i][1], boundary_table[i][1] + boundary_table[i][3]
+        jx1, jx2, jy1, jy2 = boundary_table[j][0], boundary_table[j][0] + boundary_table[j][2], boundary_table[j][1], boundary_table[j][1] + boundary_table[j][3]
+        iremove = boundary_table[i][4]
+
+        ixm = (ix1 + ix2) /2
+        iym = (iy1 + iy2) /2
+        jxm = (jx1 + jx2)
+
+'''
+
 
 for i in range(index) : 
     print(boundary_table[i])
@@ -100,7 +153,7 @@ for i in range(index + 1):
 
 #display('image', image)
 cv2.imwrite('./test_set_3/output_shapes.jpg', image)
-#display('./test_set_3/output_shapes.jpg')
+display('./test_set_3/output_shapes.jpg')
 #display('Thresh',thresh)
 cv2.waitKey()
 
@@ -109,5 +162,34 @@ f.write( str(index+1) + '\n')
 for i in range(index + 1):
     f.write( str(i) + ' ' + str(boundary_table[i][0])+ ' '+ str(boundary_table[i][1])+ ' '+ str(boundary_table[i][2])+ ' '+ str(boundary_table[i][3]) + '\n')
 f.close()
-
 ### Part 1 ### fin
+
+'''
+### Part 2 ### sta
+# feature matching pick
+
+img2 = cv2.imread('./test_set_2/original_image.jpg')
+img1 = cv2.imread('./test_set_2/outer_product2.jpg')
+
+sift = cv2.xfeatures2d.SIFT_create()
+kp1, des1 = sift.detectAndCompute(img1,None)
+kp2, des2 = sift.detectAndCompute(img2,None)
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1,des2, k=2)
+good = []
+for m,n in matches:
+    if m.distance < 0.55*n.distance:
+        good.append([m])
+img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,None,flags=2)
+
+print(len(good))
+
+# 결과 출력
+#cv2.imshow('Good Match', res)
+cv2.imwrite('./test_set_2/feature_mapping_3.jpg', img3)
+display('./test_set_2/feature_mapping_3.jpg')
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+### Part 2 ### fin
+'''
