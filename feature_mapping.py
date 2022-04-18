@@ -17,8 +17,8 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
-img2 = cv2.imread('../img/test_set_2/original_image.jpg')
-img1 = cv2.imread('../img/test_set_2/outer_product3.jpg')
+img2 = cv2.imread('./test_set_2/original_image.jpg')
+img1 = cv2.imread('./test_set_2/outer_product3.jpg')
 
 sift = cv2.xfeatures2d.SIFT_create()
 kp1, des1 = sift.detectAndCompute(img1,None)
