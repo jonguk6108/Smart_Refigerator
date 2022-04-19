@@ -117,7 +117,6 @@ for i in range(0, index):
         for k in range(index) : 
             print(str( boundary_table[k][0] ) + " " + str( boundary_table[k][0] + boundary_table[k][2] ) + " " + str( boundary_table[k][1] ) + " " + str( boundary_table[k][1] + boundary_table[k][3] ) + " ")
         print(" ")
-"""
 
 #merge boundary box -2
 for i in range(0, index):
@@ -134,6 +133,8 @@ for i in range(0, index):
         ixm = (ix1 + ix2) /2
         iym = (iy1 + iy2) /2
         jxm = (jx1 + jx2)
+
+"""
 
 
 
@@ -157,11 +158,11 @@ print(index)
 for i in range(index+1) : 
     print(boundary_table[i])
 
-remove_file("./test_set_3/outer_product_", ".jpg")
+remove_file("./test_set_3/inner_product_", ".jpg")
 for i in range(index + 1):
     x,y,w,h = boundary_table[i][0], boundary_table[i][1], boundary_table[i][2], boundary_table[i][3]
     cut_image = image[y:y+h, x:x+w].copy()
-    cv2.imwrite("./test_set_3/outer_product_"+str(i)+".jpg", cut_image)
+    cv2.imwrite("./test_set_3/inner_product_"+str(i)+".jpg", cut_image)
     cv2.rectangle(image, (x, y), (x + w, y + h), (0,0,255), 2)
 
 #display('image', image)
@@ -177,32 +178,43 @@ for i in range(index + 1):
 f.close()
 ### Part 1 ### fin
 
-'''
+
 ### Part 2 ### sta
 # feature matching pick
 
-img2 = cv2.imread('./test_set_2/original_image.jpg')
-img1 = cv2.imread('./test_set_2/outer_product2.jpg')
+outer_product_number = 2
+inner_product_number = index + 1
 
-sift = cv2.xfeatures2d.SIFT_create()
-kp1, des1 = sift.detectAndCompute(img1,None)
-kp2, des2 = sift.detectAndCompute(img2,None)
-bf = cv2.BFMatcher()
-matches = bf.knnMatch(des1,des2, k=2)
-good = []
-for m,n in matches:
-    if m.distance < 0.55*n.distance:
-        good.append([m])
-img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,None,flags=2)
+matching_values = [[0 for col in range(outer_product_number)] for row in range( inner_product_number )]
 
-print(len(good))
+for i in range(inner_product_number) :
+    for j in range(outer_product_number) :
 
+        imgi = cv2.imread('./test_set_3/inner_product_' + str(i) +'.jpg')
+        imgj = cv2.imread('./test_set_3/outer_product_' + str(j) +'.jpg')
+
+        sift = cv2.xfeatures2d.SIFT_create()
+        kp1, des1 = sift.detectAndCompute(imgi,None)
+        kp2, des2 = sift.detectAndCompute(imgj,None)
+        bf = cv2.BFMatcher()
+        matches = bf.knnMatch(des1,des2, k=2)
+        good = []
+        for m,n in matches:
+            if m.distance < 0.5*n.distance:
+                good.append([m])
+#       img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,None,flags=2)
+        matching_values[i][j] = len(good)
+
+for i in range(inner_product_number):
+    print(matching_values[i])
+
+'''
 # 결과 출력
 #cv2.imshow('Good Match', res)
 cv2.imwrite('./test_set_2/feature_mapping_3.jpg', img3)
 display('./test_set_2/feature_mapping_3.jpg')
 cv2.waitKey()
 cv2.destroyAllWindows()
+'''
 
 ### Part 2 ### fin
-'''

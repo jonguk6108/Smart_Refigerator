@@ -18,14 +18,8 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
-img2 = cv2.imread('./test_set_3/sample8.jpg')
-img1 = cv2.imread('./test_set_3/sample2.jpg')
-
-'''
-img2 = cv2.imread('./test_set_3/sample1.jpg')
-img2 = cv2.imread('./test_set_3/sample2.jpg')
-img2 = cv2.imread('./test_set_3/sample3.jpg')
-'''
+img1 = cv2.imread('./test_set_3/inner_product_2.jpg')
+img2 = cv2.imread('./test_set_2/inner_product1.jpg')
 
 sift = cv2.xfeatures2d.SIFT_create()
 kp1, des1 = sift.detectAndCompute(img1,None)
@@ -34,7 +28,7 @@ bf = cv2.BFMatcher()
 matches = bf.knnMatch(des1,des2, k=2)
 good = []
 for m,n in matches:
-    if m.distance < 0.65*n.distance:
+    if m.distance < 0.7*n.distance:
         good.append([m])
 img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,None,flags=2)
 
