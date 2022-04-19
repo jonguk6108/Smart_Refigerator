@@ -33,7 +33,7 @@ def remove_file(file_path, file_extension):
 ### Part 1 ### sta
 # classfication boundary box in original picture and store each index's position informations
 
-image = cv2.imread('./test_set_3/gusilbul1.jpg')
+image = cv2.imread('./test_set_4/inner.png')
 original = image.copy()
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -158,20 +158,20 @@ print(index)
 for i in range(index+1) : 
     print(boundary_table[i])
 
-remove_file("./test_set_3/inner_product_", ".jpg")
+remove_file("./test_set_4/inner_product_", ".png")
 for i in range(index + 1):
     x,y,w,h = boundary_table[i][0], boundary_table[i][1], boundary_table[i][2], boundary_table[i][3]
     cut_image = image[y:y+h, x:x+w].copy()
-    cv2.imwrite("./test_set_3/inner_product_"+str(i)+".jpg", cut_image)
+    cv2.imwrite("./test_set_4/inner_product_"+str(i)+".png", cut_image)
     cv2.rectangle(image, (x, y), (x + w, y + h), (0,0,255), 2)
 
 #display('image', image)
-cv2.imwrite('./test_set_3/output_shapes.jpg', image)
-display('./test_set_3/output_shapes.jpg')
+cv2.imwrite('./test_set_4/output_shapes.png', image)
+display('./test_set_4/output_shapes.png')
 #display('Thresh',thresh)
 cv2.waitKey()
 
-f = open("./test_set_3/positions.txt", 'w')
+f = open("./test_set_4/positions.txt", 'w')
 f.write( str(index+1) + '\n')
 for i in range(index + 1):
     f.write( str(i) + ' ' + str(boundary_table[i][0])+ ' '+ str(boundary_table[i][1])+ ' '+ str(boundary_table[i][2])+ ' '+ str(boundary_table[i][3]) + '\n')
@@ -182,7 +182,7 @@ f.close()
 ### Part 2 ### sta
 # feature matching pick
 
-outer_product_number = 2
+outer_product_number = 3
 inner_product_number = index + 1
 
 matching_values = [[0 for col in range(outer_product_number)] for row in range( inner_product_number )]
@@ -190,8 +190,8 @@ matching_values = [[0 for col in range(outer_product_number)] for row in range( 
 for i in range(inner_product_number) :
     for j in range(outer_product_number) :
 
-        imgi = cv2.imread('./test_set_3/inner_product_' + str(i) +'.jpg')
-        imgj = cv2.imread('./test_set_3/outer_product_' + str(j) +'.jpg')
+        imgi = cv2.imread('./test_set_4/inner_product_' + str(i) +'.png')
+        imgj = cv2.imread('./test_set_4/product_' + str(j+1) +'.png')
 
         sift = cv2.xfeatures2d.SIFT_create()
         kp1, des1 = sift.detectAndCompute(imgi,None)

@@ -3,13 +3,12 @@
 import cv2, numpy as np
 import matplotlib.pylab as plt
 
-img1 = cv2.imread('./test_set_2/outer_product3.jpg')
-img2 = cv2.imread('./test_set_2/inner_product1.jpg')
-img3 = cv2.imread('./test_set_2/inner_product2.jpg')
-img4 = cv2.imread('./test_set_2/inner_product3.jpg')
+img1 = cv2.imread('./test_set_4/inner_product_1.png')
+img2 = cv2.imread('./test_set_4/product_2.png')
+img3 = cv2.imread('./test_set_4/product_3.png')
 
 cv2.imshow('query', img1)
-imgs = [img1, img2, img3, img4]
+imgs = [img1, img2, img3]
 hists = []
 for i, img in enumerate(imgs) :
     plt.subplot(1,len(imgs),i+1)
