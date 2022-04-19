@@ -1,4 +1,4 @@
-#date : 20220418
+#date : 20220419
 
 from email.base64mime import body_encode
 from re import X
@@ -6,6 +6,7 @@ from tkinter import N
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+import os
 
 def display(im_path):
     dpi = 80
@@ -23,12 +24,16 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
+def remove_file(file_path, file_extension):
+    for i in range(100) :
+        if os.path.exists(file_path + str(i) + file_extension):
+            os.remove(file_path + str(i) + file_extension)
+
 
 ### Part 1 ### sta
 # classfication boundary box in original picture and store each index's position informations
 
-image = cv2.imread('./test_set_3/sample4.jpg')
-#image = cv2.imread('./test_set_2/product3.jpg')
+image = cv2.imread('./test_set_3/gusilbul1.jpg')
 original = image.copy()
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -38,6 +43,8 @@ ROI_number = 0
 cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
+image_size_w = image.shape[1]
+image_size_h = image.shape[0]
 
 boundary_table = [[0 for i in range(5)] for j in range(100)]
 
@@ -65,7 +72,12 @@ for i in range(0, index):
         jx1, jx2, jy1, jy2 = boundary_table[j][0], boundary_table[j][0] + boundary_table[j][2], boundary_table[j][1], boundary_table[j][1] + boundary_table[j][3]
         iremove = boundary_table[i][4]
 
-        #left up in jbox
+        # remove edge box
+        if (ix1 < 5 and iy1 < 5) or (ix2 > image_size_w - 5 and iy1 < 5) or (ix1 < 5 and iy2 > image_size_h - 5) or (ix2 > image_size_w - 5 and iy2 > image_size_h - 5):
+            boundary_table[i][4] = -1
+            continue
+
+        # left up in jbox
         if jx1 <= ix1 <= jx2 and jy1 <= iy1 <= jy2  :
             if jx2 < ix2 :
                 jx2 = ix2
@@ -73,7 +85,7 @@ for i in range(0, index):
                 jy2 = iy2
             iremove = -1
 
-        #left down in jbox
+        # left down in jbox
         elif jx1 <= ix1 <= jx2 and jy1 <= iy2 <= jy2  :
             if jx2 < ix2 :
                 jx2 = ix2
@@ -81,7 +93,7 @@ for i in range(0, index):
                 jy1 = iy1
             iremove = -1
 
-        #right up in jbox
+        # right up in jbox
         elif jx1 <= ix2 <= jx2 and jy1 <= iy1 <= jy2  :
             if ix1 < jx1 :
                 jx1 = ix1
@@ -89,7 +101,7 @@ for i in range(0, index):
                 jy2 = iy2
             iremove = -1
     
-        #right down in jbox
+        # right down in jbox
         elif jx1 <= ix2 <= jx2 and jy1 <= iy2 <= jy2  :
             if ix1 < jx1 :
                 jx1 = ix1
@@ -145,6 +157,7 @@ print(index)
 for i in range(index+1) : 
     print(boundary_table[i])
 
+remove_file("./test_set_3/outer_product_", ".jpg")
 for i in range(index + 1):
     x,y,w,h = boundary_table[i][0], boundary_table[i][1], boundary_table[i][2], boundary_table[i][3]
     cut_image = image[y:y+h, x:x+w].copy()
