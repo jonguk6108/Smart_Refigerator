@@ -25,7 +25,7 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
-def compare(inner_product_number, outer_product_number, threshold) :
+def compare(inner_product_number, outer_product_number, threshold, matching_list_inner, matching_list_outer) :
     matching_values = [[0 for col in range(outer_product_number)] for row in range( inner_product_number )]
 
     for i in range(inner_product_number) :
@@ -50,9 +50,30 @@ def compare(inner_product_number, outer_product_number, threshold) :
     for i in range(inner_product_number):
         print(matching_values[i])
 
+    for i in range(inner_product_number):
+        max_index = 0
+        max_value = -1
+
+        for j in range(outer_product_number):
+            if(matching_list_outer[j] != -1):
+                continue
+
+            if(matching_values[i][j] > max_value):
+                max_index = j
+                max_value = matching_values[i][j]
+        
+        if(max_value > 30):
+            matching_list_inner[i] = max_index
+            matching_list_outer[max_index] = i
     
+
+    matching_values = [[1000000 for col in range(outer_product_number)] for row in range( inner_product_number )]
     for inner_index in range(inner_product_number) :
+        if(matching_list_inner[inner_index] != -1):
+                continue
         for outer_index in range(outer_product_number) :
+            if(matching_list_outer[outer_index] != -1):
+                continue
             print('\ninner_index : ' +str(inner_index) + ' ,outer_index : '+ str(outer_index) + ' \n')
             img1 = cv2.imread("./img/inner/inner_"+str(inner_index)+".png")
             img2 = cv2.imread('./img/crop/outer_crop_'+ str(outer_index) + ".png")
@@ -74,9 +95,8 @@ def compare(inner_product_number, outer_product_number, threshold) :
                 hists.append(hist)
 
             query = hists[0]
-            methods = {'CORREL' :cv2.HISTCMP_CORREL, 'CHISQR':cv2.HISTCMP_CHISQR, 
-                    'INTERSECT':cv2.HISTCMP_INTERSECT,
-                    'BHATTACHARYYA':cv2.HISTCMP_BHATTACHARYYA}
+            methods = {'CHISQR':cv2.HISTCMP_CHISQR, 'BHATTACHARYYA':cv2.HISTCMP_BHATTACHARYYA}
+            methods_size = 1
             for j, (name, flag) in enumerate(methods.items()):
                 print('%-10s'%name, end='\t')
                 for i, (hist, img) in enumerate(zip(hists, imgs)):
@@ -84,8 +104,38 @@ def compare(inner_product_number, outer_product_number, threshold) :
                     ret = cv2.compareHist(query, hist, flag)
                     if flag == cv2.HISTCMP_INTERSECT: #교차 분석인 경우 
                         ret = ret/np.sum(query)        #비교대상으로 나누어 1로 정규화
+
+                    if(i != 0):
+                        methods_size *= ret
                     print("img%d:%7.2f"% (i+1 , ret), end='\t')
                 print()
+            
+            matching_values[inner_index][outer_index] = methods_size
             #plt.show()
+
+    print("\n\nmatching_list : ")
+    print(matching_list_inner)
+    print(matching_list_outer)
+    print("\n")
+
+    for i in range(inner_product_number):
+        print(matching_values[i])
+
+    for i in range(inner_product_number):
+        if(matching_list_inner[i] != -1):
+            continue
+        min_index = -1
+        min_value = 10000000
+
+        for j in range(outer_product_number):
+            if(matching_list_outer[j] != -1):
+                continue
+
+            if(matching_values[i][j] < min_value):
+                min_index = j
+                min_value = matching_values[i][j]
+
+        matching_list_inner[i] = min_index
+        matching_list_outer[min_index] = i
 
 ### Part 2 ### fin
