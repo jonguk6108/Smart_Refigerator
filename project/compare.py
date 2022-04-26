@@ -74,7 +74,7 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
         for outer_index in range(outer_product_number) :
             if(matching_list_outer[outer_index] != -1):
                 continue
-            print('\ninner_index : ' +str(inner_index) + ' ,outer_index : '+ str(outer_index) + ' \n')
+            #print('\ninner_index : ' +str(inner_index) + ' ,outer_index : '+ str(outer_index) + ' \n')
             img1 = cv2.imread("./img/inner/inner_"+str(inner_index)+".png")
             img2 = cv2.imread('./img/crop/outer_crop_'+ str(outer_index) + ".png")
 
@@ -98,7 +98,7 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
             methods = {'CHISQR':cv2.HISTCMP_CHISQR, 'BHATTACHARYYA':cv2.HISTCMP_BHATTACHARYYA}
             methods_size = 1
             for j, (name, flag) in enumerate(methods.items()):
-                print('%-10s'%name, end='\t')
+                #print('%-10s'%name, end='\t')
                 for i, (hist, img) in enumerate(zip(hists, imgs)):
                     #---④ 각 메서드에 따라 img1과 각 이미지의 히스토그램 비교
                     ret = cv2.compareHist(query, hist, flag)
@@ -107,16 +107,16 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
 
                     if(i != 0):
                         methods_size *= ret
-                    print("img%d:%7.2f"% (i+1 , ret), end='\t')
-                print()
+                    #print("img%d:%7.2f"% (i+1 , ret), end='\t')
+                #print()
             
             matching_values[inner_index][outer_index] = methods_size
             #plt.show()
 
-    print("\n\nmatching_list : ")
-    print(matching_list_inner)
-    print(matching_list_outer)
-    print("\n")
+    #print("\n\nmatching_list : ")
+    #print(matching_list_inner)
+    #print(matching_list_outer)
+    #print("\n")
 
     for i in range(inner_product_number):
         print(matching_values[i])
