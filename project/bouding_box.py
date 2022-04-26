@@ -156,7 +156,7 @@ def bounding_box(pos, ID):
         for i in range(index + 1):
             x,y,w,h = boundary_table[i][0], boundary_table[i][1], boundary_table[i][2], boundary_table[i][3]
             cut_image = image[y:y+h, x:x+w].copy()
-            cv2.imwrite("./img/inner/inner_product_"+str(i)+".png", cut_image)
+            cv2.imwrite("./img/inner/inner_"+str(i)+".png", cut_image)
             cv2.rectangle(image, (x, y), (x + w, y + h), (0,0,255), 2)
 
         #display('image', image)
