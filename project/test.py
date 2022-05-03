@@ -17,7 +17,9 @@ inner_product_number = bounding_box.bounding_box('inner', 0)
 
 matching_list_inner = [-1 for col in range(inner_product_number)]
 matching_list_outer = [-1 for col in range(outer_product_number)]
-compare.compare(3, 3, 0.7, matching_list_inner, matching_list_outer)
+
+outer_list = [0,1,2]
+compare.compare(3, 3, 0.7, matching_list_inner, matching_list_outer, outer_list)
 
 print("\n\nmatching_list : ")
 print(matching_list_inner)

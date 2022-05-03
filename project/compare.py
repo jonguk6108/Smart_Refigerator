@@ -25,11 +25,11 @@ def display(im_path):
     ax.imshow(im_data, cmap='gray')
     plt.show()
 
-def compare(inner_product_number, outer_product_number, threshold, matching_list_inner, matching_list_outer) :
-    matching_values = [[0 for col in range(outer_product_number)] for row in range( inner_product_number )]
+def compare(inner_product_number, outer_list, threshold, matching_list_inner, matching_list_outer) :
+    matching_values = [[0 for col in range(max(outer_list))] for row in range( inner_product_number )]
 
     for i in range(inner_product_number) :
-        for j in range(outer_product_number) :
+        for j in outer_list :
             imgi = cv2.imread("./img/inner/inner_"+str(i)+".png")
             imgj = cv2.imread('./img/crop/outer_crop_'+ str(j) + ".png")
 
@@ -54,7 +54,7 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
         max_index = 0
         max_value = -1
 
-        for j in range(outer_product_number):
+        for j in outer_list :
             if(matching_list_outer[j] != -1):
                 continue
 
@@ -67,11 +67,11 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
             matching_list_outer[max_index] = i
     
 
-    matching_values = [[1000000 for col in range(outer_product_number)] for row in range( inner_product_number )]
+    matching_values = [[1000000 for col in range(max(outer_list))] for row in range( inner_product_number )]
     for inner_index in range(inner_product_number) :
         if(matching_list_inner[inner_index] != -1):
                 continue
-        for outer_index in range(outer_product_number) :
+        for outer_index in outer_list :
             if(matching_list_outer[outer_index] != -1):
                 continue
             #print('\ninner_index : ' +str(inner_index) + ' ,outer_index : '+ str(outer_index) + ' \n')
@@ -127,7 +127,7 @@ def compare(inner_product_number, outer_product_number, threshold, matching_list
         min_index = -1
         min_value = 10000000
 
-        for j in range(outer_product_number):
+        for j in outer_list:
             if(matching_list_outer[j] != -1):
                 continue
 
